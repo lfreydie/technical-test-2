@@ -8,7 +8,7 @@ import LoadingButton from "../../components/loadingButton";
 import ProgressBar from "../../components/ProgressBar";
 
 import api from "../../services/api";
-const ProjectList = () => {
+const ProjectList = ({onlyTop}) => {
   const [projects, setProjects] = useState(null);
   const [activeProjects, setActiveProjects] = useState(null);
 
@@ -23,6 +23,23 @@ const ProjectList = () => {
 
   useEffect(() => {
     const p = (projects || []).filter((p) => p.status === "active");
+    if (!onlyTop) {
+      setActiveProjects(p);
+      return ;
+    }
+    // top monthly budget project
+    p.sort((a, b) => {
+      const aBudget = a.budget_max_monthly ?? 0;
+      const bBudget = b.budget_max_monthly ?? 0;
+
+      if (aBudget < bBudget) {
+        return 1;
+      }
+      if (bBudget < aBudget) {
+        return -1;
+      }
+      return 0;
+    });
     setActiveProjects(p);
   }, [projects]);
 
@@ -35,7 +52,9 @@ const ProjectList = () => {
 
   return (
     <div className="w-full p-2 md:!px-8">
-      <Create onChangeSearch={handleSearch} />
+      {!onlyTop && (
+        <Create onChangeSearch={handleSearch} />
+      )}
       <div className="py-3">
         {activeProjects.map((hit) => {
           return (

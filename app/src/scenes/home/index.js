@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
+import ProjectList from "../project/list";
 
 const Home = () => {
   const [availableUsers, setAvailableUsers] = useState();
@@ -13,7 +14,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="px-2 md:!px-8 flex flex-col md:flex-row gap-5 mt-5">
+    <div className="px-2 md:!px-8 flex flex-col gap-5 mt-5">
       <div className="flex-1 mb-[10px]">
         <h2 className="text-[22px] font-semibold mb-4">Available</h2>
         {availableUsers?.map((user) => (
@@ -28,6 +29,10 @@ const Home = () => {
           </div>
         ))}
         {availableUsers?.length === 0 ? <span className="italic text-gray-600">No available users.</span> : null}
+      </div>
+      <div  className="flex flex-col gap-2">
+        <h2 className="text-[22px] font-semibold">Top monthly budget project</h2>
+        <ProjectList onlyTop />
       </div>
     </div>
   );
